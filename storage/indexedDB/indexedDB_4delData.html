@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+<title>增加数据</title>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="debug"></div>
+
+<script type="text/javascript">
+
+
+var request,db,transaction,objectStore,index,range,data;
+
+
+// 打开或新建数据库 
+request=indexedDB.open('testdb');
+
+// 事件 - 成功时触发
+request.onsuccess=function (e) {
+	db=request.result;
+
+	transaction=db.transaction('objectStore1', 'readwrite');
+
+	objectStore=transaction.objectStore('objectStore1');// 获取存储对象
+	// 删除单个数据 1=id
+	objectStore.delete(1).onsuccess=function (e) {
+		w('删除了数据。 ', 'objectStore.delete - '+e.type);
+		return e.target;
+	}
+
+	// 删除多个数据 1<=id<=9
+	objectStore.delete(IDBKeyRange.bound(1,9)).onsuccess=function (e) {
+		w('删除了数据。 ', 'objectStore.delete - '+e.type);
+		return e.target;
+	}
+
+	/*
+		Ex：data是数据，x是最小值，y是最大值。
+
+		IDBKeyRange.lowerBound(min, minOpen);
+		IDBKeyRange.lowerBound(x, true);// x<data
+		IDBKeyRange.lowerBound(x, fales);// x<=data
+
+		IDBKeyRange.upperBound(max, maxOpen);
+		IDBKeyRange.upperBound(y, true);// data<y
+		IDBKeyRange.upperBound(y, fales);// data<=y
+
+		IDBKeyRange.bound(min,max,minOpen,maxOpen);
+		IDBKeyRange.bound(x,y,false,false); x<=data<=y
+		IDBKeyRange.bound(x,y,true,true); x<data<y
+
+		IDBKeyRange.only(z); z=data
+	*/
+}
+
+
+
+</script>
+</body>
+</html>

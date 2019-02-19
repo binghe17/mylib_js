@@ -1,0 +1,110 @@
+<script type="text/javascript">
+//Date 对象
+//http://www.w3school.com.cn/js/jsref_obj_date.asp
+
+	document.write(Date());			//Fri Dec 21 15:27:47 2012	//返回当日的日期和时间。
+
+
+	//-----获取
+	var d = new Date()
+	//var d = new Date("July 21, 1983 01:15:00")
+	//
+	d.getFullYear()				//2012	//年，从 Date 对象以四位数字返回年份。
+	d.getMonth()				//11	//月，从 Date 对象返回月份 (0 ~ 11)。
+	d.getDate()					//21 	//日，从 Date 对象返回一个月中的某一天 (1 ~ 31)。
+	d.getDay()					//5 	//周，从 Date 对象返回一周中的某一天 (0 ~ 6)。
+
+	d.getHours()				//15 	//时，返回 Date 对象的小时 (0 ~ 23)。
+	d.getMinutes()				//33	//分，返回 Date 对象的分钟 (0 ~ 59)。
+	d.getSeconds()				//		//秒，返回 Date 对象的秒数 (0 ~ 59)。
+	d.getMilliseconds()			//599	//微妙，返回 Date 对象的毫秒(0 ~ 999)。
+
+	d.getTime()					//1356075365551
+	d.getTimezoneOffset()		//-480 // GMT 时间与本地时间以分钟计的时间差
+	d.getTimezoneOffset()/60; 	//转换为 GMT +/- 小时
+
+
+	//------设置
+	d.setFullYear(1992)		//年，设置 Date 对象中的年份（四位数字）。
+	d.setMonth(0)			//月，设置 Date 对象中月份 (0 ~ 11)。
+	d.setDate(15)			//日，设置 Date 对象中月的某一天 (1 ~ 31)。
+
+	d.setHours(15)			//时，设置 Date 对象中的小时 (0 ~ 23)。
+	d.setMinutes(1)			//分，设置 Date 对象中的分钟 (0 ~ 59)。
+	d.setMinutes(1)			//秒，设置 Date 对象中的秒钟 (0 ~ 59)。
+	d.setMilliseconds(1)	//微妙，设置 Date 对象中的毫秒 (0 ~ 999)。
+
+	d.setFullYear(1992,10,3)	//年（年,月,日）
+	d.setMonth(0,20)			//月（月,日）·
+	d.setHours(15,35,1)			//时（时,分,秒） 15:35:01
+
+	// var d = Date.parse("Jul 8, 2005");	//时间戳 //1120752000000
+	var d = Date.UTC(2005,7,8)				//时间戳 //1123459200000
+
+
+	document.write(d)//Sat Dec 15 15:42:43 UTC+0800 2012
+
+
+	d.toString() 		//把 Date 对象转换为字符串 				//Fri Dec 21 15:54:05 UTC+0800 2012
+	d.toTimeString() 	//把 Date 对象的时间部分转换为字符串
+	d.toDateString() 	//把 Date 对象的日期部分转换为字符串
+
+
+
+	//-----------------------------------------
+
+	var weekday=new Array(7)
+	weekday[0]="Sunday"
+	weekday[1]="Monday"
+	weekday[2]="Tuesday"
+	weekday[3]="Wednesday"
+	weekday[4]="Thursday"
+	weekday[5]="Friday"
+	weekday[6]="Saturday"
+	document.write("Today it is " + weekday[d.getDay()])//Today it is Friday
+
+
+	var month=new Array(12)
+	month[0]="January"
+	month[1]="February"
+	month[2]="March"
+	month[3]="April"
+	month[4]="May"
+	month[5]="June"
+	month[6]="July"
+	month[7]="August"
+	month[8]="September"
+	month[9]="October"
+	month[10]="November"
+	month[11]="December"
+	document.write("The month is " + month[d.getMonth()])	//The month is December
+
+
+	var born = new Date("July 21, 1983 01:15:00")
+	document.write("I was born in " + born.getFullYear())	//I was born in 1983
+
+	var born = new Date("July 21, 1983 01:15:00")
+	document.write(born.getHours())							//1
+
+	var born = new Date("July 21, 1983 01:15:00")
+	document.write(born.getMinutes())						//15
+
+
+	//计算出从 1970/01/01 至今有多少年
+	var minutes = 1000*60;
+	var hours = minutes*60;
+	var days = hours*24;
+	var years = days*365;
+	var d = new Date();
+	var t = d.getTime();
+	var y = t/years;
+	document.write("It's been: " + y + " years since 1970/01/01!");//It's been: 43.00086775592973 years since 1970/01/01!
+
+
+
+
+
+
+
+
+</script>

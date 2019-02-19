@@ -1,0 +1,1 @@
+{"demofun":{"_acts":{"6":{"fun":"time","save":"xxx"},"7":{"fun":"date","opt":{"1":"xxx","0":"Y\/m\/d"},"isvar":[0,1],"save":"zzz"},"8":{"fun":"var_show","opt":{"1":1466684306,"0":"zzz"}}},"_re1":[{"fun":"time","save":"_myfun\/demofun\/_acts\/8\/opt\/1"}],"_re2":[{"fun":"_Gdata","opt":["xxx","*DEL*"]}],"_re":{"6\/save,7\/opt\/1":"xxx"},"_args":["7\/opt\/0","7\/save,8\/opt\/0"]}}

@@ -1,0 +1,39 @@
+<script type="text/javascript">
+
+	//-----定义
+	function baseClass(){
+		this.showMsg = function(){
+			alert("baseClass::showMsg");
+		}
+		this.baseShowMsg = function(){
+			alert("baseClass::baseShowMsg");
+		}
+	}
+	baseClass.showMsg = function(){
+		alert("baseClass::showMsg static");
+	}
+
+
+	function extendClass(){
+		this.showMsg =function (){
+			alert("extendClass::showMsg");
+		}
+	}
+	extendClass.showMsg = function(){
+		alert("extendClass::showMsg static")
+	}
+
+
+	//--------使用
+	extendClass.prototype = new baseClass();
+	instance = new extendClass();
+	instance.showMsg(); 					//显示extendClass::showMsg
+	instance.baseShowMsg(); 				//显示baseClass::baseShowMsg
+	baseClass.showMsg.call(instance);		//显示baseClass::showMsg static
+
+	var baseinstance = new baseClass();
+	baseinstance.showMsg.call(instance);	//显示baseClass::showMsg
+
+
+//http://www.cnblogs.com/yjf512/archive/2011/06/03/2071914.html
+</script>

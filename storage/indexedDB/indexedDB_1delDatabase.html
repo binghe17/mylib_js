@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="debug"></div>
+
+<script type="text/javascript">
+
+var request,db;
+
+request=indexedDB.deleteDatabase('testdb');
+request.onblocked=function (e) {
+	w('删除数据库被截！理由有可能是正在使用中，刷新后将被删除。', 'delete - '+e.type);
+}
+request.onerror=function (e) {
+	w('删除数据库出错！', 'delete - '+e.type);
+}
+// request.onupgradeneeded = null;// 删除数据库不触发升级需求
+request.onsuccess=function (e) {
+	w('成功删除数据库 '+(db?(db.name+' (ver:'+db.version+')'):' testdb (即便没有也尝试)。'), 'delete - '+e.type);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8"/>
+</head>
+<body>
+	
+	<div id="menu"><button>增加</button></div>
+
+
+<script>
+//-----------------引用测试
+
+//a=[];//数组也是对象
+a={}; //a=new Object();
+b=a;//别名，对象可以引用地址
+a.b=function (){ alert('aaaaaaaa'); }//函数不会JSON化
+// a.b();
+// b.b();
+a.c='xxxxx';
+//alert(JSON.stringify(a));//函数是取不到值的，
+
+
+// c=function (){
+// 	alert('aaaaaaaaa')
+// }//函数也算对象
+// d=c
+// c.c='cccccc';
+// // alert(c.c)
+// // alert(d.c)
+// c.d=[];
+// c.d[1]='ddddd';
+// alert(c.d[1])
+// alert(JSON.stringify(c));//函数对象里最好不要存变量
+// e={};
+// e.a=c;
+// alert(e.a.c)
+
+dom={}
+x=dom;
+dom.a=document.querySelector('#menu');
+da=dom.a
+// alert(dom.a.innerHTML)
+// alert(x.a.innerHTML);
+da.innerHTML='aaaa';
+alert(da.innerHTML)
+alert(dom.a.innerHTML)
+
+// w=document.querySelector('#menu');
+// q=w;//拷贝选择器引用
+// q.innerHTML='xxxxx';
+// alert(w.innerHTML);
+
+arr=[12,3,4,[2,3,4,4,{'a':'aaaaa','b':'bbbbb'}]];//数组也算对象（字符串，数组，布尔值等单个值以外都会给引用）（不拷贝具体数据）
+brr=arr;//引用
+brr[3][1]='aaaaaaaa';
+crr=brr[3][4];//引用
+crr.c='xxxxxxx';
+alert(JSON.stringify(arr));
+
+
+//------------prototype
+// function get_winfun(){
+// 	var rs={}; var arr=Object.getOwnPropertyNames(window); //p(arr)
+// 	for (var i in arr) {
+// 		var tmp=typeof window[arr[i]];
+// 		if(!rs[tmp]) rs[tmp]=[];
+// 		rs[tmp].push(arr[i]);//按类型分类
+// 		// if(typeof window[arr[i]]==='function') rs.push();//只获取函数类型的名字
+// 	}
+// 	p(rs);
+// 	p(String.prototype);
+// 	p(document.__proto__);
+// }
+// get_winfun()
+
+
+
+</script>
+
+</body>
+</html>

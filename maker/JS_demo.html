@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="jslib/zcore.js" type="text/javascript"></script>
+
+	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+	<script src="jslib/jquery.json-2.4.js"></script>
+</head>
+<body>
+
+	<div id="a" class="aaa"><span>aaa</span>111</div>
+	<div id="b">bbb</div>
+	<div id="c">ccc</div>
+	<div id="d">ddd</div>
+	<button onclick="zScript(str1)">zScript()</button>
+	<button onclick="funX()">funX()</button>
+	<style>
+		#a{background: #ccc; padding: 10px;}
+		#b{background: #aaa; padding: 10px;}
+		#c{background: #3ae; padding: 10px;}
+		#d{background: #777; padding: 10px;}
+		pre{word-wrap:break-word; padding: 0;margin: 0;}
+	</style>
+
+	<script type="text/javascript">
+
+		//---------动态层级结构
+
+		newNode('aaa','tag','span'); 		//alert(temp['aaa'].tagName);		//新建DOM
+		newNode('aaa','text','eeeeeee');	//alert(temp['aaa'].innerHTML);	//加文本
+		newNode('aaa','title','aaa');		//alert(temp['aaa'].title);			//加属性
+		newNode('aaa','onclick','showLog("aaa")');//单击事件 运行函数
+		newNode('aaa','style','color:red;');
+		newNode('aaa','id','game');
+		saveNode('aaa','#c');//把新建的DOM给谁
+
+
+		str1='funX=function(){showLog("this is funX()")}';
+		//zScript(str1);//js
+		// zStyle('body{ background:blue;}');//css
+		// zStyle('body{ background:green;}');//css
+
+		// setNode('#game','text','aaaa');
+		//setNode('#game','title');
+		setNode('#game','onclick','showLog("bbb")');//单击事件 运行函数
+		//delNode('#a span');//删除
+
+
+		moveNode('#b','#a',1);//移动（把B放入A里的上面）
+		moveNode('#a','#c');
+		moveNode('#d','#a');
+
+
+		//-------------------------
+		
+		var dofun2 = function (){ this.innerHTML = (this.innerHTML)+"===="; } //定义引入结构
+		addEvent('#d','onclick','dofun2');
+		//delEvent('#d','onclick');
+
+			
+
+	</script>
+
+
+
+	<div id="showLog"></div>
+	<script defer="defer">
+		//--------------------------------------
+
+		/*
+		环境调度资源
+		打开、新建》初始化加载之后可用的资源 (数据，动作有哪些)---改动前
+		数据集指定》操作集指定》结果集指定---改动之后
+		保存》
+		*/
+
+		// 新建流程》选择流程
+		// 新建对象》选择对象
+		// 新建动作》选择动作
+		// 设置动作运行起始点
+
+
+		//-------系统：状态池
+		zData('system','status','thisRun','aaaaa');//程序执行到哪里了？(动作链123)
+		zData('system','status','thisObj','bbbbbbbbbb'); //用户选择的对象有那些？(数据池123)
+		zData('system','status','ramData','cccccccc');//临时操作域
+		
+
+		//-------流程：执行顺序
+		// zData('actionBox','localStorage','module','localStorage');
+		// zData('actionBox','localStorage','config','set');
+		// zData('actionBox','localStorage','inData','id');
+		// zData('actionBox','localStorage','outData','cccccccc');
+
+		zData('zRun','A','inData','bbbbbb');//放入的资源
+		zData('zRun','A','module','bbbbbb');//用这个模块
+		zData('zRun','A','theme','bbbbbb');//模块操作清单
+		zData('zRun','A','outData','bbbbbb');//输出的资源
+
+
+		//-------动作：运行顺序 流程控制
+		zData('act','action','b','bbbbbb');//函数类型
+		zData('act','config','c','cccccccc');//配置
+		zData('act','data','b','bbbbbb');//数据
+		zData('act','next','c','cccccccc');
+
+
+		//------对象
+		zData('data','path','a','aaaaaaa');//大小写区分
+		zData('data','path','b','22222');
+
+		//------配置
+		zData('config','A','B','bbbbbb');
+
+
+
+		//showLog(arr2json(zData['status']));
+		// showLog(zData['data']['path']['a']);
+		// unzData('data','path','a');
+		//showLog(showToString('zData')); 
+		showLog(arr2json(zData['data']));
+		
+
+
+
+
+
+
+
+
+
+
+		// --------数组的增删改
+
+		// [Forms]
+		// Button,ListBox,CheckBoxList,RadioList,Calendar,TextBox,Password,
+		// TextArea,ComboBox,DatePicker,Spinner,TreeSelect,FileUpload
+
+
+		function html2json(){
+
+		}
+
+		function json2html(){
+
+		}
+
+
+
+		showLog('JS执行时间：' + runtime(1) +'ms');
+
+	</script>
+
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<meta charset="utf-8" />
+<script type="text/javascript">
+
+// 1、onbeforeunload： 	事件触发的时候弹出一个有确定和取消的对话框，确定则离开页面，取消则继续待在本页。
+// 						handler可以设一个返回值作为该对话框的显示文本。
+//
+// 2、onunload事件： 	当用户关闭一个页面时触发 onunload 事件
+//
+// 注意：强行关闭窗口除外。（开始状态拦下右键关闭也是无法执行删除SESSION的操作。）
+
+
+	//修复页面刷新时，会自动调用到onbeforeunload的bug
+	window.onbeforeunload = function (){
+		var n = window.event.screenX - window.screenLeft;
+		var b = n > document.documentElement.scrollWidth-20;
+		if(b && window.event.clientY < 0 || window.event.altKey) {
+			//window.event.returnValue = "=========确认退出吗？=========";	//弹出关闭窗口确认框（可取消）
+			window.onunload = function (){	//只有确定退出后，才运行这段代码（浏览器会，先关闭，然后执行）
+				alert('待制作，删除session请求代码！');//
+			}
+		} //else alert('正在刷新页面');	//else体，刷新页面时执行的代码。
+	}
+
+
+	//-----------------其他关闭方法----------------
+	//
+	// JS自动关闭窗口 兼容IE6-8/Chrome/opera都可以(Firefox不行)
+	// window.opener = null; 			//关闭自己而不提示for Ie6
+	// window.open("","_self");  		//关闭自己而不提示for ie7-8
+	// window.close();					//关闭窗口
+
+
+	// javascript:this.window.opener = null;window.open("","_self");window.close();	//url方式关闭（一句代码）
+
+
+
+</script>

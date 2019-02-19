@@ -1,0 +1,114 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script	type="text/javascript">
+jQuery(document).ready(function($) {
+
+	$("#openWin2").click(function () {
+		win2=window.open('win2.html','face','width=400,height=400,top=0,left=0,scrollbars=1');
+
+
+	});
+	$("#win2color").click(function () {
+		$("#win2",win2.document).css({  "background-color": "red" }).toggle();
+		//win2.document.write("This is 'myWindow'")
+		//win2.moveTo(350,50);
+	});
+
+
+});
+</script>
+
+
+<div id='div1'>ddddddddddddiv</div>
+<a id='openWin2' href="#">openWin2</a>
+<a id='win2color' href="#">win2color</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script	type="text/javascript">
+/* -----------JS 领悟-------------
+//JS换头像图片等，修改只是预览上的修改。真正保存数据，还是要用表单发送数据（使用隐藏表单）。
+ */
+
+/* -----------------------------
+$(selector, window.top.document);//获得顶级窗口里面的元素
+$(selector, window.opener.document);//获得打开该窗口的父窗口里面的元素
+$(selector, window.parent.document);//获得父窗口里面的元素
+//$(selector, window.top.frames[0].document);
+
+
+window.location.reload()刷新当前页面.
+parent.location.reload()刷新父亲对象（用于框架）
+opener.location.reload()刷新父窗口对象（用于单开窗口）
+top.location.reload()刷新最顶端对象（用于多开窗口）
+
+
+//-----------------------------
+
+jquery 获取父窗口的元素 父窗口 子窗口(2012-05-28 10:28:34)
+
+jquery获取父窗口ID为：$("#父窗口元素ID",window.parent.document);
+javascript获取父窗口ID为：window.parent.document.getElementByIdx_xx_x("父窗口元素ID")；
+取父窗口的元素方法：$(selector, window.parent.document);
+那么你取父窗口的父窗口的元素就可以用：$(selector, window.parent.parent.document);
+
+
+
+1.通过window对象的open()方法，open()方法将会产生一个新的window窗口对象
+
+其用法为：
+window.open(URL,windowName,parameters);
+
+URL: 描述要打开的窗口的URL地址，如何为空则不打开任何网页；
+windowName:描述被打开的窗口的民称，可以使用'_top'、'_blank'等内建名称，这里的名称跟<a href="..." target="...">里的target属性是一样的。
+parameters:描述被打开的窗口的参数值，或者说是样貌，其包括窗口的各个属性值，及要传入的参数值。
+
+例如：
+
+打开一个 400 x 100 的干净的窗口：
+open('','_blank','width=400,height=100,menubar=no,toolbar=no,
+location=no,directories=no,status=no,scrollbars=yes,resizable=yes')
+
+也可以这样写： var newWindow = open('','_blank');
+
+参数说明如下：
+
+top=# 窗口顶部离开屏幕顶部的像素数
+left=# 窗口左端离开屏幕左端的像素数
+width=# 窗口的宽度
+height=# 窗口的高度
+menubar=... 窗口有没有菜单，取值yes或no
+toolbar=... 窗口有没有工具条，取值yes或no
+location=... 窗口有没有地址栏，取值yes或no
+directories=... 窗口有没有连接区，取值yes或no
+scrollbars=... 窗口有没有滚动条，取值yes或no
+status=... 窗口有没有状态栏，取值yes或no
+resizable=... 窗口给不给调整大小，取值yes或no
+
+2.使用window.open()创建的窗口与父窗口通信
+可以在子窗口页面中通过window.opener来获取父窗口对象，获取之后子窗口便可以对父窗口执行刷新，传值等操作。
+如：
+window.opener.location.reload(); //子窗口刷新父窗口
+window.opener.location.href //获取父窗口href
+window.opener.locaiton.pathname //获取父窗口路径名
+
+//刷新父页面
+window.location.href=window.location.href ; //重新定位父页面
+window.location.reload;
+
+
+ */
+</script>
+
+

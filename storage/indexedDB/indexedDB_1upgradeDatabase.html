@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="debug"></div>
+
+<script type="text/javascript">
+
+
+var request,db,version;
+
+
+request=indexedDB.open('testdb'); // 打开或新建数据库
+
+request.onsuccess=function (e) {
+	db=request.result;
+
+	w('成功打开数据库 '+db.name+' (ver:'+db.version+')', 'open - '+e.type);
+	w('数据库名称: '+db.name, e.type);
+	w('数据库版本: '+db.version, e.type);
+	w('数据库对象名称集: '+Array.prototype.join.call(db.objectStoreNames), e.type);
+
+	version=db.version+1;// 增加版本号
+	
+	db.close();
+	request=null;
+	db=null;
+
+	request=indexedDB.open('testdb', version);
+
+	// 事件 - 创建或升级版本时触发
+	request.onupgradeneeded=function (e) {
+		db=request.result;
+		console.log(e);
+		if(db.version===2) {
+			// 创建存储对象
+			var objectStore3=db.createObjectStore('objectStore3', {keyPath:'id', autoIncrement:true});
+			var objectStore4=db.createObjectStore('objectStore4');
+			// 创建存储对象索引
+			var idx_username=objectStore3.createIndex('idx_username', 'username', {unique:true});
+			var idx_password=objectStore4.createIndex('idx_password', 'password');
+			// 输出结果
+			w('升级数据库 '+db.name+' (ver:'+e.oldVersion+'->'+e.newVersion+')', e.type);
+			w((objectStore3 ? '成功' : '无法')+'创建存储对象 objectStore3 。', e.type);
+			w((objectStore4 ? '成功' : '无法')+'创建存储对象 objectStore4 。', e.type);
+			w((idx_username ? '成功' : '无法')+'创建存储对象索引 idx_username (unique) 。', e.type);
+			w((idx_password ? '成功' : '无法')+'创建存储对象索引 idx_password 。', e.type);
+		}
+		request.onsuccess=function (e) {
+			db=request.result;
+			w('成功打开数据库 '+db.name+' (ver:'+db.version+')', 'open - '+e.type);
+			w('数据库名称: '+db.name, e.type);
+			w('数据库版本: '+db.version, e.type);
+			w('数据库对象名称集: '+Array.prototype.join.call(db.objectStoreNames), e.type);
+		} // 版本2更新内容
+	}
+
+} // 事件 - 成功时触发
+
+
+
+
+
+
+</script>
+</body>
+</html>

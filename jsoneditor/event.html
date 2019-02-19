@@ -1,0 +1,232 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Js(DOM)动态添加节点和事件</title>
+</head>
+<body>
+
+
+
+
+<b>例子1：</b>
+<table id="tb">
+	<tr><td>添加节点的地方</td></tr>
+</table>
+<table>
+	<tr>
+		<td><input type="button" value="添加节点" onclick="addEl()" /></td>
+		<td><input type="text" id="txt"/></td>
+	</tr>
+</table>
+<script language="javascript">
+//--------------------------例子1-----------------------
+function addEl(){
+	 var tb = document.getElementById("tb"); //找到要添加节点的父节点(table)
+	 var tbody = document.createElement("tbody"); //创建tbody节点，表格中必须有tbody才能添加，直接添加tr不成功
+	 var tr = document.createElement("tr"); //创建tr节点
+	 var td = document.createElement("td"); //创建td节点
+
+	 var newTp = document.createElement("input");//添加一个文本框节点，设置id和type属性
+	 newTp.id = "text1";
+	 newTp.type = "text";
+
+	 var newEl = document.createElement("input");	 //添加一个按钮
+	 newEl.type = 'button';
+	 newEl.value = "button";
+	 newEl.name = "button1";
+
+	 //添加onclick事件,和事件执行的函数
+	 newEl.onclick = function dofun(){
+		document.getElementById("txt").value += newTp.value;
+	 }
+
+	 td.appendChild(newTp)//把2个节点添加到td当中
+	 td.appendChild(newEl);//把2个节点添加到td当中
+	 tr.appendChild(td); //把td添加到tr中
+	 tbody.appendChild(tr); //把tr添加到td中
+	 tb.appendChild(tbody); //把td添加到table中
+}
+//----------------------------------------------------------
+</script>
+
+
+
+
+
+<br><br><hr><b>例子2：</b><br>
+<div>
+<h1 onclick="changetext(this)">点击文本!</h1>
+</div>
+<script language="javascript">
+
+//--------------------例子2：新建时直接定义事件-----------------
+
+function changetext(id){
+	var newE1=document.createElement("div");
+	newE1.setAttribute("title","DOM Test");
+	newE1.innerHTML = "10000";
+	newE1.onclick = function dofun(){
+			this.innerHTML = Number(this.innerHTML)+1;
+	}
+
+	id.innerHTML="Ooops!";
+	id.parentNode.appendChild(newE1);
+}
+//----------------------------------------------------------
+</script>
+
+
+
+
+
+<br><br><hr><b>例子3：</b><br>
+<button id="btn1">btn1</button>
+<br>
+<button onclick="addDemo1()">给btn1加事件-----</button>
+<button onclick="addDemo2()">给btn1加事件====</button>
+<button onclick="delDemo()">给btn1删除事件</button>
+<script language="javascript">
+
+//--------------------例子3：给已有的DIV上加事件----------------------------
+
+var dofun1 = function (){ btn1.innerHTML = (btn1.innerHTML)+"------"; }
+var dofun2 = function (){ this.innerHTML = (this.innerHTML)+"===="; }
+
+
+//x--------给事件添加多个函数---不推荐
+// function addEvents(target, type, func) { 
+// 	//浏览器不同步 不建议使用
+// 	if (target.addEventListener){ //标准浏览器时
+// 		target.addEventListener(type, func, false); 	//非IE上--多个（在一个onclick上可以绑定多种函数定义）
+// 	} else if (target.attachEvent){ //IE浏览器时
+// 		target.attachEvent("on" + type, func); 	//IE上-----一个（在一个onclick事件上只能添加一个函数）
+// 	}
+// };
+//x--------给事件删除指定函数---不推荐
+// function delEvents(target, type, func){ 
+// 	//浏览器不同步 不建议使用
+// 	if (target.removeEventListener) {
+// 		target.removeEventListener(type, func, false); 	//非IE上--多个（在一个onclick上删除已绑定的函数定义中的一个）
+// 	} else if(target.detachEvent) {
+// 		target.detachEvent("on" + type, func); 		//IE上-----一个（在一个onclick事件上删除仅有一个的执行函数）
+// 	}
+// }; 
+
+//给事件条件一种函数---建议使用他
+function addEvent(target, type, func) {
+	target[type] =func;
+}
+//给事件删除指定函数
+function delEvent(target, type) {
+	target[type] = null; 
+}
+
+
+function addDemo1(){
+	var dom=document.getElementById("btn1");
+	addEvent(dom,"onclick",dofun1);
+	// addEvents(dom,"click",dofun1);
+}
+function addDemo2(){
+	var dom=document.getElementById("btn1");
+	addEvent(dom,"onclick",dofun2);
+	// addEvents(dom,"click",dofun2);
+}
+function delDemo(){
+	var dom=document.getElementById("btn1");
+	delEvent(dom,'onclick');
+	// delEvents(dom,"click",dofun1);//删除单击事件中的一个
+	// delEvents(dom,"click",dofun2);//删除单击事件中的一个
+
+}
+//----------------------------------------------------------
+</script>
+
+
+
+
+<br><br><hr><b>例子4：</b><br>
+<textarea id="JStext" rows="10" cols="50">
+demoX();
+function test(){
+	a[0]=a[0]+12; //删除a之后会报错，不会往下执行了
+	return a[0];
+}
+//重名函数被刷，不报错
+function test(){
+	newA="xxxxxxxxxx";
+	a=null;
+	return a;
+}
+alert(test());
+
+</textarea>
+<button onclick="runJsText('JStext')">eval(加载脚本)</button>
+<button onclick="test()">test()</button>
+<button onclick="alert(a)">a</button>
+<button onclick="demoX()">demoX()</button>
+<script language="javascript">
+
+//--------------------例子4：载入字符串的JS代码片段----------------------------
+function demoX(){
+	alert('this is demoX')
+}
+
+a=["aaaaaa",1111];
+
+function runJsText(id){
+	try{
+		var code=document.getElementById(id).value;
+		eval(code); //函数定义执行后消失，对全局变量的执行结果还在，要让函数定义一直存在用增加新DOM的方法
+	}catch(err){}
+}
+//----------------------------------------------------------
+</script>
+
+
+
+
+<br><br><hr><b>例子5：</b><br>
+<textarea id="CSStext" rows="10" cols="50">
+body{
+	background-color:blue;
+}
+</textarea>
+<button onclick="addCssText('CSStext');">head_style</button> 
+<script language="javascript">
+//--------------------例子5：载入字符串的css代码片段----------------------------
+function addCssText(id){
+	var style=document.createElement("style");
+	style.setAttribute("type", "text/css");
+	var cssString=document.getElementById(id).value;
+	if(style.styleSheet) style.styleSheet.cssText = cssString;// IE
+	else style.appendChild(document.createTextNode(cssString));// w3c
+	var styles = document.getElementsByTagName('style');
+	if(styles.length>0) styles[0].parentNode.removeChild(styles[0]); //alert('删除样式');
+	else document.querySelector('head').appendChild(style); //alert('添加样式');
+}
+//----------------------------------------------------------
+</script>
+
+
+
+
+<br><br><hr><b>例子6：</b><br>
+<div id="msg6">msg6区域</div>
+<textarea id="input6" rows="10" cols="50">
+<script>alert('aaaaaa');</script>
+</textarea>
+<button onclick="demo6()">msg6内替换HTML</button> 
+<script language="javascript">
+//--------------------例子6：用字符串增加html代码片段----------------------------
+function demo6(){
+	document.getElementById('msg6').innerHTML=document.getElementById('input6').value;
+}
+//----------------------------------------------------------
+</script>
+
+
+</body>
+</html>
+

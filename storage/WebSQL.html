@@ -1,0 +1,93 @@
+<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <link rel="stylesheet" type="text/css" href="main.css"> <script type="text/javascript" src="main.js"></script> <title>WebSQL</title> </head> <body> <div class="reference"> <a href="http://www.w3.org/TR/webdatabase/" target="_blank">WebDatabase - w3.org</a> </div> <div id="control"> <button id="open" onclick="myOpenWebSQL()" title="open">创建＆打开<br>数据库</button> <button id="close" onclick="myDeleteWebSQL()" title="del">删除数据库</button> <button id="log" onclick="myClearLog()" title="log">清除日志</button> <hr> <button id="tx" onclick="myTransaction()" title="tx" class="data">执行transaction语句</button> <button id="rtx" onclick="myTransaction('read')" title="rtx" class="data">执行readTransaction语句</button><br> <datalist id="exSql"> <option value="CREATE TABLE IF NOT EXISTS 'tbl' ('id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 'name' TEXT NOT NULL);"> <option value="INSERT INTO 'tbl' ('name') VALUES ('user1');"> <option value="DELETE FROM 'tbl' WHERE 'id'>3"> <option label="ex:SELECT" value="SELECT * FROM 'tbl';" selected> </datalist> <label><input type="text" list="exSql" name="sqlStatement">SQL</label><br> <label><input type="text" name="sqlPrepare">prepareArray-json</label> </div> <script type="text/javascript">
+
+
+
+/*
+WebSQL 没有删除数据库的 API 函数！
+Chrome手动删除位置 C:\Users\D\AppData\Local\Google\Chrome\User Data\{$浏览器用户名}\databases
+Baidu手动删除位置C:\Documents and Settings\Administrator\Application Data\Baidu\browser\UserData\0A73B7929C9546628F097CEEACA6E079410064006d0069006e006900730074007200610074006f007200
+*/
+
+
+var db, transaction, onsuccess, onerror, callback,
+_sql=document.querySelector('input[name=sqlStatement]'),
+_prepare=document.querySelector('input[name=sqlPrepare]');
+_sql.value=localStorage.getItem('sql');
+_prepare.value=localStorage.getItem('prepare');
+
+window.onbeforeunload=function (e) {
+	localStorage.setItem('sql', _sql.value);
+	localStorage.setItem('prepare', _prepare.value);
+};
+
+
+function myOpenWebSQL () {
+	// openDatabase(name:String, version:String, displayName:String, estimatedSize:unsignedLong[, callbackCreation:Function])
+	db=openDatabase(
+		'testdb',
+		'1',
+		'Description of testdb.',
+		1024*1024*10,
+		function callback (db) {
+			// db.version='' 旧版本
+			// db.changeVersion(oldVersion, newVersion)
+			// db.transaction(callback, onsuccess, onerror)
+			// db.readTransaction(callback, onsuccess, onerror)
+			console.log(db);
+			w('创建数据库，原始版本为 '+JSON.stringify(db.version), 'creationCallback');
+		}
+	);
+	if(db) w('打开数据库 '+'testdb (ver:'+db.version+')', 'openDatabase');
+}
+
+function myDeleteWebSQL() {
+	w('例如Chrome手动删除位置 C:\\Users\\{$电脑用户名}}\\AppData\\Local\\Google\\Chrome\\User Data\\{$浏览器用户名}\\databases', 'error');
+	w('例如Baidu手动删除位置 C:\\Documents and Settings\\Administrator\\Application Data\\Baidu\\browser\\UserData\\0A73B7929C9546628F097CEEACA6E079410064006d0069006e006900730074007200610074006f007200', 'error');
+}
+
+
+// 运行SQL语句
+function myTransaction(type){
+	if(!db) return w('请先打开数据库！', 'tip')
+	db[(type?'readT':'t')+'ransaction'](
+		function callback (transaction) {
+			// 获取并初始化 sql 和 prepare 。
+			var sql=document.querySelector('input[name=sqlStatement]').value.trim(),
+				prepare=document.querySelector('input[name=sqlPrepare]').value.trim();
+			if(!(sql)) return w('SQL不为空！', 'tip');
+			if(prepare.length>0){
+				try {
+					prepare=JSON.parse(prepare);
+				}catch(error){
+					w('prepare 是json字符串，例如：["name", "value"]', 'tip')
+				}
+			}else{
+				prepare=null;
+			}
+
+
+			// 运行
+			try{
+			transaction.executeSql(
+				sql,
+				prepare,
+				function onsuccess (transaction, result) {
+					var i, rows=result.rows, length=rows.length;
+					w('rows.length: '+length, 'success');
+					for (i=0; i<length; i++) {
+						w(JSON.stringify(rows.item(i)),'success');
+					};
+					w('rowsAffected: '+result.rowsAffected, 'success');
+					try{w('insertId: '+result.insertId, 'success');}catch(error){w('insertId: '+error.code+' - '+error.message, 'error');}// insertId 他妈的！
+				},
+				function onerror (transaction, error) {
+					w((type?' 非只读命令！':'')+error.message, 'error.code:'+error.code);
+				}
+			);
+			}catch(error){
+				w('无法运行！'+error.message, 'error - '+error.code)
+			}
+		}/*, onerror, onsuccess*/
+	);
+}
+</script> </body> <style type="text/css">input:nth-child(1), input:nth-child(2) {height:32px;width:640px;margin:2px;font-size: 12px;border:2px solid #1e90ff;border-radius: 4px;text-indent: 12px; }</style></html>

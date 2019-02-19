@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="debug"></div>
+
+<script type="text/javascript">
+
+
+var request,db,transaction,objectStore,index,range,data;
+
+
+// 打开或新建数据库 
+request=indexedDB.open('testdb');
+
+// 事件 - 成功时触发
+request.onsuccess=function (e) {
+	db=request.result;
+	/*
+		Ex：data是数据，x是最小值，y是最大值。
+
+		IDBKeyRange.lowerBound(min, minOpen);
+		IDBKeyRange.lowerBound(x, true);// x<data
+		IDBKeyRange.lowerBound(x, fales);// x<=data
+
+		IDBKeyRange.upperBound(max, maxOpen);
+		IDBKeyRange.upperBound(y, true);// data<y
+		IDBKeyRange.upperBound(y, fales);// data<=y
+
+		IDBKeyRange.bound(min,max,minOpen,maxOpen);
+		IDBKeyRange.bound(x,y,false,false); x<=data<=y
+		IDBKeyRange.bound(x,y,true,true); x<data<y
+
+		IDBKeyRange.only(z); z=data
+	*/
+
+	transaction=db.transaction('objectStore1', 'readonly');
+
+	objectStore=transaction.objectStore('objectStore1');// 获取存储对象
+
+	objectStore.get(1).onsuccess=function (e) {
+		data=e.target.result;
+		w('获取了数据: '+JSON.stringify(data), 'objectStore.get - '+e.type);
+	};
+	objectStore.openCursor(IDBKeyRange.bound(1,5),'next').onsuccess=function(e) {
+		var cursor=e.target.result;
+		if (cursor) {
+			w('获取了数据：'+JSON.stringify(cursor.value), 'objectStore.openCursor - bound - '+e.type);
+			cursor.continue();
+		};
+	};// openCursor mode: 'next', 'prev'
+
+	index=objectStore.index('idx_username');
+	// 获取索引
+	// index 记录数
+	index.count().onsuccess=function (e){
+		w('总记录数：'+e.target.result, 'index')	
+	}
+
+	// 获取多个数据
+	index.openCursor(IDBKeyRange.lowerBound('u_'+0.1), 'next').onsuccess=function (e) {
+		var cursor=e.target.result;
+		if(cursor) {
+			// w('获取了数据：'+JSON.stringify(cursor), 'index.openCursor - '+e.type);
+			w('获取了数据：'+JSON.stringify(cursor.value), 'index.openCursor - bound - '+e.type);
+			cursor.continue();// 下一个
+		}
+	}
+
+	// 获取单个数据
+	index.openCursor(IDBKeyRange.only('u_0.39456365583464503')).onsuccess=function (e) {
+		var cursor=e.target.result;
+		if(cursor) {
+			w('获取了数据: '+JSON.stringify(cursor.value), 'index.openCursor - only - '+e.type);
+			cursor.continue();// 没有下一个
+		}
+	}
+
+
+
+
+
+	// objectStore.
+	// add, clear, count, createIndex, delete, deleteIndex, get, index, openCursor, put
+}
+
+
+
+</script>
+</body>
+</html>

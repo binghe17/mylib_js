@@ -1,0 +1,60 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+
+	$("#win2_color").click(function () {
+		$("#div1",window.opener.document).css({  "background-color": "blue" }).toggle();
+	});
+
+
+});
+</script>
+
+<div id='win2'>win2</div>
+<a href="#" id='win2_color' >ok</a>
+<a href="#" >2</a>
+<a href="#" >3</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	/*
+
+二．分离方法值
+
+	 为了保证HTML页面的整齐干净，通过加载节点取值的方式进行操作。
+	 window.onload=function(){
+		 var img=document.getElementsByTagName('img');
+		 for var(var i=0;i<img.length;i++){
+			img[i].onclick=function(){
+				_opener(this.src);
+			};
+		 }
+	 };
+
+一．普通方法取值
+
+	 通过onclick事件处理，将当前图片的值传输给父页面。
+	 function _opener(img){
+		 var faceimg=window.opener.document.getElementById('faceimg');
+		 faceimg.src=img;
+	 }
+
+
+ */
+</script>

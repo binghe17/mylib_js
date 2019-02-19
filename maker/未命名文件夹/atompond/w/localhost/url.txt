@@ -1,0 +1,1 @@
+{"/":"index","/post":"post","/maker":"*MAKER*"}

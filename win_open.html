@@ -1,0 +1,59 @@
+<script type="text/javascript" src="jquery-1.8.3.js"></script>
+<script type="text/javascript">
+
+	myWindow=window.open('','aa','width=200,height=100');
+	myWindow.document.writeln('<p id="son">This is myWindow</p>');
+	myWindow.focus();
+	myWindow.opener.document.writeln('<p id="parent">This is the parent window</p>');
+	$('#son', myWindow.document).html('aaaaaaaaaa');
+
+	$('#parent', parent.document).html('bbbbbbbb');
+	$('#parent', self.document).html('ccccccccc');
+	$('#parent').html('dddddddd');
+	$('#parent', myWindow.opener.document).html('eeeeeeee');
+	$('#parent', top.document).html('fffffffffff');
+
+
+
+
+
+/* ---------------------------------------------------
+// 语法 window.open(URL,windowName,parameters);
+// window.open()的第二个参数（_blank）
+// window.open()的第三个参数（parameters的说明）
+
+	top=# 			窗口顶部离开屏幕顶部的像素数
+	left=# 			窗口左端离开屏幕左端的像素数
+	width=400 		窗口的宽度
+	height=200 		窗口的高度
+	menubar=no 		窗口有没有菜单，取值yes或no
+	toolbar=no 		窗口有没有工具条，取值yes或no
+	location=no 	窗口有没有地址栏，取值yes或no
+	directories=no 	窗口有没有连接区，取值yes或no
+	scrollbars=no 	窗口有没有滚动条，取值yes或no
+	status=yes 		窗口有没有状态栏，取值yes或no
+	resizable=yes 	窗口给不给调整大小，取值yes或no
+
+	//--------------------------------
+	//要引用窗口中的一个框架，可以使用如下语法：
+	frame[i]		//当前窗口的框架
+	self.frame[i]	//当前窗口的框架
+	w.frame[i]		//窗口 w 的框架
+
+	//要引用一个框架的父窗口（或父框架），可以使用下面的语法：
+	parent			//当前窗口的父窗口
+	self.parent		//当前窗口的父窗口
+	w.parent 		//窗口 w 的父窗口
+
+	//要从顶层窗口含有的任何一个框架中引用它，可以使用如下语法：
+	top				//当前框架的顶层窗口
+	self.top		//当前框架的顶层窗口
+	f.top			//框架 f 的顶层窗口
+
+	//--------------------------------
+	alert(""); //弹出信息提示对话框
+	confirm(""); //弹出信息确认对话框
+	prompt(""); //具有交互性质的对话框
+---------------------------------------------------- */
+
+</script>

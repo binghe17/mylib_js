@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>sessionStorage</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<div id="control">
+	<button onclick="set()" title="add" class="data">设置</button>
+	<button onclick="get()" title="get" class="data">获取</button>
+	<button onclick="del()" title="del" class="data">删除</button>
+	<button onclick="clear()" title="clear" class="data">清除</button>
+</div>
+<script type="text/javascript">
+/*
+clear()
+key()
+length
+setItem()
+getItem()
+removeItem()
+*/
+
+// 增加
+function set () {
+	var k='key_'+Math.floor(Math.random()*1000),
+		v='item_'+Math.floor(Math.random()*1000);
+	sessionStorage.setItem(k,v);
+	w('设置了键 '+k+' 值 '+v, 'sessionStorage.setItem');
+}
+
+
+
+// 获取
+function get () {
+	var len=sessionStorage.length, i, k, v;
+	for (i=0; i<len; i++) {
+		k=sessionStorage.key(i);
+		v=sessionStorage.getItem(k);
+		w('获取了键名 '+k +' 值 '+v, 'sessionStorage.key & getItem');
+	}
+}
+
+
+// 删除
+function del () {
+	if(sessionStorage.length===0) return w('没有值可删。', 'tip');
+
+	var k=sessionStorage.key(0);
+	sessionStorage.removeItem(k);
+	w('删除了 '+k, 'sessionStorage.removeItem');
+}
+
+
+// 全部删除
+function clear () {
+	sessionStorage.clear();
+	w('全部删除。', 'sessionStorage.clear');
+}
+</script>
+</body>
+</html>

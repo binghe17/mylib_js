@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="control">
+	<button id="open" onclick="openIndexedDB()" title="open">创建＆打开<br>数据库</button>
+	<button id="close" onclick="closeIndexedDB()" title="close">关闭数据库</button>
+	<button id="delete" onclick="deleteIndexedDB()" title="del">删除数据库</button>
+	<button id="log" onclick="myClearLog()" title="log">清除日志</button>
+	<hr>
+	<button id="addData" onclick="addData()" title="add" class="data">增加数据</button>
+	<button id="putData" onclick="putData()" title="put" class="data">增换数据</button>
+	<button id="getData" onclick="getData()" title="get" class="data">获取数据</button>
+	<button id="deleteData" onclick="deleteData()" title="del" class="data">删除数据</button>
+</div>
+
+<script type="text/javascript">
+
+
+var request,db;
+
+// 打开或新建数据库 
+function openIndexedDB() {
+	request=indexedDB.open('testdb');// 打开数据库，即新建 IDBOpenDBRequest 对象。
+
+	// 侦听事件
+	request.onblocked=function (e) {
+		w('打开数据库被拦截！', 'open - '+e.type);
+	}
+	request.onerror=function (e) {
+		w('打开数据库出错！', 'open - '+e.type);
+	}
+	request.onupgradeneeded=function (e) {
+		db=request.result;
+
+		// 创建存储对象
+		var object=db.createObjectStore('object', {keyPath:'id', autoIncrement:true});
+		w('创建存储对象。\n'+JSON.stringify(object,0,2), 'db.createObjectStore');
+
+		// 创建存储对象索引
+		var idx_username=object.createIndex('idx_username', 'username');// {unique:true, multiEntry:true}
+		w('创建存储对象索引。\n'+JSON.stringify(object,0,2), 'db.createIndex');
+	}
+	request.onsuccess=function (e) {
+		db=request.result;
+		w('打开数据库 '+db.name+' (ver:'+db.version+')', 'open - '+e.type);
+	}
+}
+
+
+
+
+
+// 删除数据库
+function deleteIndexedDB() {
+	var rq=indexedDB.deleteDatabase('testdb');
+
+	rq.onblocked=function (e) {
+		w('删除数据库被截！理由有可能是正在使用中，刷新后将被删除。', 'delete - '+e.type);
+	}
+	rq.onerror=function (e) {
+		w('删除数据库出错！', 'delete - '+e.type);
+	}
+	// rq.onupgradeneeded = null;// 删除数据库不触发升级需求
+	rq.onsuccess=function (e) {
+		w('成功删除数据库 '+(db?(db.name+' (ver:'+db.version+')'):' testdb (即便没有也尝试)。'), 'delete - '+e.type);
+	}
+}
+
+
+// 关闭数据库
+function closeIndexedDB() {
+	if(!request) return w('没有打开数据库。', 'close');
+
+	db=request.result;
+
+	db.onclose=function (e) { w('关闭数据库 testdb', 'close - '+e.type); }
+	db.onerror=function (e) { w('关闭数据库出错。', 'close - '+e.type); }
+	db.onabort=function (e) { w('关闭数据库 testdb', 'close - '+e.type); }
+	db.onversionchange=function (e) { w('关闭数据库testdb', 'close - '+e.type); }
+
+	db.close();
+	w('关闭了数据库 testdb 。(非事件输出)', 'close')
+}
+
+
+
+
+// 增加数据
+function addData() {
+	if(!db) return w('没有打开数据库。', 'addData');
+
+	// 打开对象 - 打开模式 readwrite, readonly, versionchange
+	var transaction=db.transaction('object','readwrite');
+	var object=transaction.objectStore('object');
+	var data={
+		id:1,
+		username:'User_'+Math.floor(Math.random()*10),
+		password:'Pass_'+Math.floor(Math.random()*10),
+		ctime:((new Date().getTime()/1000)>>0),
+	};
+	var request=object.add(data);
+	request.onerror=function (e) {
+		w(JSON.stringify(e.target.error,0,2), 'object.add - '+e.type);
+	}
+	request.onsuccess=function (e) {
+		w(JSON.stringify(e.target.result,0,2), 'object.add - '+e.type);
+	}
+	transaction.oncomplete=function (e) {w('成功增加数据。'+JSON.stringify(data,0,2), 'object.add'+e.type); };
+	transaction.onerror=function (e) {w('无法增加数据。'+JSON.stringify(data,0,2), 'object.add'+e.type); };
+}
+
+
+// 增换数据
+function putData () {
+	if(!db) return w('没有打开数据库。', 'putData');
+
+	// 打开对象 - 打开模式 readwrite, readonly, (versionchange - 内置被动)
+	var transaction=db.transaction('object','readwrite');
+	var object=transaction.objectStore('object');
+	var data={
+		id:1,
+		username:'User_'+Math.floor(Math.random()*10),
+		password:'Pass_'+Math.floor(Math.random()*10),
+		ctime:((new Date().getTime()/1000)>>0),
+	};
+	var request=object.put(data);
+
+	// Events
+	request.onerror=function (e) {
+		w(JSON.stringify(e.target.error,0,2), 'putData - '+e.type);
+	}
+	request.onsuccess=function (e) {
+		w(JSON.stringify(e.target.result,0,2), 'putData - '+e.type);
+	}
+	transaction.oncomplete=function (e) {
+		w('成功增换数据。\n'+JSON.stringify(data,0,2), 'putData - '+e.type);
+	};
+	transaction.onerror=function (e) {
+		w('无法增换数据。\n'+JSON.stringify(data,0,2), 'putData - '+e.type);
+	};
+}
+
+// 获取数据
+function getData () {
+	if(!db) return w('没有打开数据库。', 'getData');
+
+	// 打开对象 - 打开模式 readwrite, readonly, versionchange
+	var transaction=db.transaction('object','readwrite');
+	var object=transaction.objectStore('object');
+	object.get(1).onsuccess=function (e) {
+		w(JSON.stringify(e.target.result,0,1), 'objectStore.get - success');
+	}
+
+	var request=object.openCursor(IDBKeyRange.lowerBound(0));
+	request.onerror=function(e){
+		w('无法获取数据。\n'+JSON.stringify(e.target.error), 'objectStore.openCursor - '+e.type);
+	};
+	request.onsuccess=function(e){
+		var cursor=e.target.result;
+		if(cursor){
+			w(JSON.stringify(cursor.value), 'objectStore.openCursor - success');
+			cursor.continue();
+		}
+	};
+	request.onerror=function(e){
+		w('无法获取数据。\n'+JSON.stringify(e.target.error), 'objectStore.openCursor - error');
+	};
+
+	transaction.oncomplete=function (e) {
+		w('完成获取数据。\n'+JSON.stringify(e.target), 'transaction - complete');
+
+	};
+	transaction.onerror=function (e) {
+		w('无法获取数据。\n'+JSON.stringify(e.target,0,2), 'transaction - error');
+	};
+
+	// 用索引获取数据
+	var index=object.index('idx_username');
+	request=index.openCursor(IDBKeyRange.lowerBound(0));
+		request.onerror=function(e){
+		w('无法获取数据。\n'+JSON.stringify(e.target.error), 'index.openCursor - '+e.type);
+	};
+	request.onsuccess=function(e){
+		var cursor=e.target.result;
+		if(cursor){
+			w(JSON.stringify(cursor.value), 'index.openCursor - success');
+			cursor.continue();
+		}
+	};
+}
+
+
+// 删除数据
+function deleteData () {
+	if(!db) return w('没有打开数据库。', 'getData');
+
+	// 打开对象 - 打开模式 readwrite, readonly, versionchange
+	var transaction=db.transaction('object','readwrite');
+	var object=transaction.objectStore('object');
+	var request=object.delete(1);
+
+	// Events
+	request.onsuccess=function (e) {
+		w('成功删除数据。\n'+JSON.stringify(e.target.result), 'object.delete - success');
+	}
+	request.onerror=function (e) {
+		w('无法删除数据。\n'+JSON.stringify(e.target.error), 'object.delete - error');
+	}
+}
+
+
+
+
+
+/*我的备注
+	IDBOpenDBRequest
+		readyState            状态
+		error                     错误
+		result                    数据库 IDBDatabase
+		source                   资源
+		transaction             事务
+		onblocked              侦听屏蔽事件
+		onerror                  侦听错误事件
+		onsuccess             侦听成功事件
+		onupgradeneeded  侦听升级事件
+
+	IDBDatabase
+		onversionchange		版本切换
+		onerror							侦听错误事件
+		onclose							侦听关闭事件
+		objectStoreNames 获取存储对象名称集
+		version 						版本
+		name 							名称
+		createObjectStore	创建存储对象
+		deleteObjectStore	删除存储对象
+		transaction					开启事务
+
+IDBCursor : [ update,advance,continue,delete,toString ]
+IDBCursorWithValue : [ toString ]
+IDBDatabase : [ createObjectStore,deleteObjectStore,transaction,close,toString ]
+IDBFactory : [ webkitGetDatabaseNames,open,deleteDatabase,cmp,toString ]
+IDBIndex : [ openCursor,openKeyCursor,get,getKey,count,toString ]
+IDBKeyRange : [ only,lowerBound,upperBound,bound,toString ]
+IDBObjectStore : [ put,add,delete,get,clear,openCursor,createIndex,index,deleteIndex,count,toString ]
+IDBOpenDBRequest : [ toString ]
+IDBRequest : [ toString ]
+IDBTransaction : [ objectStore,abort,toString ]
+IDBVersionChangeEvent : [ toString ]
+	*/
+</script>
+</body>
+</html>

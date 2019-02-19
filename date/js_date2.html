@@ -1,0 +1,252 @@
+﻿<script src="calendar.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+//--------------时间
+
+	//=========阴历、阳历===========【日历插件】
+	
+	date=calendar.solar2lunar(1987,1,7); //公历转农历
+	//date=calendar.lunar2solar(1986,12,8);//农历转公历
+	// alert(calendar.getAnimal(1987))
+	str='';
+	for (var x in date) {
+		str=str+x+': '+date[x]+"\r\n";
+	};
+	document.write('<pre>'+str+'</pre>');
+	// lYear: 1986		（阴历转阳历，输出 年）（阳历转阴历，输入）
+	// lMonth: 12 		（阴历生日 月）
+	// lDay: 8 		（阴历生日 日）
+	// Animal: 虎 		生肖
+	// IMonthCn: 腊月  月份转农历称呼
+	// IDayCn: 初八 	日期转农历称呼
+	// cYear: 1987 	（阴历转阳历，输入 年）（阳历转阴历，输出）
+	// cMonth: 1 		（阳历生日 月）
+	// cDay: 7 		（阳历生日 日）
+	// gzYear: 丙寅 	天干地支
+	// gzMonth: 辛丑 	天干地支
+	// gzDay: 丙辰 	天干地支
+	// isToday: false 	是今天吗？
+	// isLeap: false 	是闰月吗？
+	// nWeek: 3 		星期几？
+	// ncWeek: 星期三 	星期几？
+	// isTerm: false 	节气与否
+	// Term: null 		节气
+
+	//============================================================
+
+
+
+	//时间戳，获取某天的时间戳
+	function setTime(Y,m,d,H,i,s,ms){
+		if(!Y) return new Date().getTime();
+		var Y=Y||0; var m=m||0; var d=d||0; 
+		var H=H||0; var i=i||0; var s=s||0; var ms=ms||0; 
+		return new Date(Y,m-1,d,H,i,s,ms).getTime();
+	}
+
+		//alert(setTime()); //1422344017895
+		//alert(date('Y-m-d H:i:s,ms',setTime(2014,1,3,3,4,42,323))); //1420128000000
+
+
+
+	//时间戳，不输出毫秒的，可获取特定日期的时间戳
+	function time(noMs,getDate){
+		if(!getDate) var getDate=new Date();//没有设置时间时用当前时间
+		var ts=getDate.getTime();
+		if(noMs) return String(ts).slice(0,-3);				//1356075365551
+		else return ts;
+	}
+
+		//alert(time());//1422344099593
+		//alert(time(1));//1422344143
+		//alert(time(0,setDate(1977,4,4)));//228987266985
+
+
+
+
+	//默认时间格式，获取某天的 默认时间格式
+	function setDate(Y,m,d,H,i,s,ms){ //年月日时分秒
+		var dd=new Date();
+		if(Y) dd.setFullYear(Y);		//年，设置 Date 对象中的年份（四位数字）。（年,月,日）getFullYear
+		if(m) dd.setMonth(m-1);		//月，设置 Date 对象中月份 (0 ~ 11)。（月,日）·
+		if(d) dd.setDate(d);			//日，设置 Date 对象中月的某一天 (1 ~ 31)。
+		if(H) dd.setHours(H);		//时，设置 Date 对象中的小时 (0 ~ 23)。（时,分,秒）
+		if(i) dd.setMinutes(i);		//分，设置 Date 对象中的分钟 (0 ~ 59)。
+		if(s) dd.setMinutes(s);		//秒，设置 Date 对象中的秒钟 (0 ~ 59)。
+		if(ms) dd.setMilliseconds(ms);	//微妙，设置 Date 对象中的毫秒 (0 ~ 999)。
+		return dd;//Tue Jan 27 2015 14:37:06 GMT+0800 (中国标准时间)
+		//var offsetTime=8*60*60*1000;//将世界时加上8小时就是北京时间
+		//return dd.toUTCString();  //UTC  0时区，（8小时前）
+	}
+
+		// alert(setDate(2015,1,2)); 
+		//alert(new Date(time()).toString());//Fri Dec 21 2012 15:54:05 UTC+0800 
+
+
+
+	//日期格式化，放入时间戳 可转换 任意时间格式
+	function date(txt, time){
+		if(!time) var obj=new Date();
+		else var obj=new Date(time);
+		//alert(obj) //Tue Jan 27 2015 14:37:06 GMT+0800 (中国标准时间)
+		dx=obj.toString().split(' ')
+		tm=dx[4].toString().split(':')
+		txt=txt.replace(/w/,obj.getDay());//数字型的星期几，如: “0” (星期日) 至 “6” (星期六)
+		txt=txt.replace(/h/,pad(obj.getHours()%12,2));//12 小时制的小时; 如: “01” 至 “12”
+		txt=txt.replace(/ms/,pad(obj.getMilliseconds(),2));		
+		txt=txt.replace(/Y/,dx[3]);//年，四位数字; 如: “1999”
+		txt=txt.replace(/m/,pad(obj.getMonth()+1,2));//月份，二位数字，若不足二位则在前面补零; 如: “01” 至 “12”
+		txt=txt.replace(/d/,dx[2]);//几日，二位数字，若不足二位则前面补零; 如: “01” 至 “31”
+		txt=txt.replace(/H/,tm[0]);//24 小时制的小时; 如: “00” 至 “23”
+		txt=txt.replace(/i/,tm[1]);//分钟; 如: “00” 至 “59”
+		txt=txt.replace(/s/,tm[2]);// 秒; 如: “00” 至 “59”
+		txt=txt.replace(/U/,obj.getTime());//总秒数
+		//txt=txt.replace(/g/,obj.getTimezoneOffset()/60);//-8 时区
+		//txt=txt.replace(/A/,obj.getHours() < 12 ? 'AM' : 'PM');//“AM” 或是 “PM”
+		txt=txt.replace(/a/,obj.getHours() < 12 ? 'am' : 'pm');//“am” 或是 “pm”
+		txt=txt.replace(/M/,dx[1]);//月份，三个英文字母; 如: “Jan”
+		txt=txt.replace(/D/,dx[0]);//星期几，三个英文字母; 如: “Fri”
+		txt=txt.replace(/g/,dx[5] +' '+ dx[6]);
+		return txt;
+	}
+
+		//alert(date('D M m Y H:i:s g a',time()));
+		// alert(date('Y-m-d H:i:s,ms U a M D h'));
+		// start=new Date().getTime();
+		// for (var i = 0; i < 10000; i++) {//性能测试
+		// 	xx=date('Y-m-d H:i:s,ms U g a');
+		// };
+		// alert(xx +'     '+ (new Date().getTime()-start));
+
+
+			//字符串填充
+			function pad(str, len, strpad,type) {
+				var strpad=strpad || '0';
+				if(type=='right') for (var i=str.toString().length; i < len; i++) str += strpad;
+				else for (var i=str.toString().length; i < len; i++) str = strpad + str;
+				return str;
+			}
+			// alert(pad('23', 6));
+
+
+
+//-----------------------------------------
+
+
+		//获取月份
+		function getMonth(obj){
+			if(!obj) var obj=new Date();
+			var month=['January','February','March','April','May','June','July','August','September','October','November','December']
+			return month[obj.getMonth()];
+		}
+		//获取星期几，某年月日的也可以计算
+		function getWeekday(obj){
+			if(!obj) var obj=new Date();
+			//var weekday=['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+			var weekday=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+			return weekday[obj.getDay()];
+		}
+		
+			//alert(getMonth(setDate(2011,2,2)))
+			//alert(getWeekday());
+			//alert(getWeekday(setDate(2011,2,3)));
+
+
+
+
+		//天数，离某天总共有多少天---------可以有负数
+		function nextDay(Y,m,d,Y2,m2,d2){
+			if(Y2) var ile=setTime(Y,m,d)-setTime(Y2,m2,d2);
+			else var ile=setTime(Y,m,d)-time();
+			return Math.ceil(ile / (1000 * 60 * 60 * 24));
+		}
+
+			var s = "2008北京奥运会";
+			var dni = nextDay(2015,2,1); //alert(dni)
+			//var dni = nextDay(2015,1,3,2015,1,1); //alert(dni)
+			if (dni > 1) document.write("今天离"+s+"还有"+dni +"天")
+			else if (dni == 1) document.write("只有1天啦！")
+			else if (dni == 0) document.write("奥运开始了！")
+			else document.write("期待奥运会再次来到中国！");
+
+
+
+
+		//离下次生日有几天---------不能有负数，用于计算下一次生日 (阳历、阴历生日计算)
+		function birthday(Y,m,d,type,rs){
+			var DY=new Date().getFullYear()
+			if(type) {//阴历的时候
+				var cal=calendar.lunar2solar(DY,m,d);//阴历转阳历
+				var Y=cal.cYear; var m=cal.cMonth; var d=cal.cDay;
+			}
+			var dni = nextDay(DY,m,d);
+			if(dni<0) dni = nextDay((++DY),m,d);//今年生日过去了，重新计算到下一年还有多少天
+			return (rs) ? DY+'-'+m+'-'+d  :  dni;
+		}
+			
+			alert(birthday(2015,1,1,1));//阴历的1月1日在今年的哪天2015-2-19，2016-2-8
+			// alert(birthday(1962,6,1,1));
+			// alert(birthday(1959,12,8,1));
+
+
+//---------------------
+
+
+		//什么时候发表的文章。
+		function time_ago(timestamp) {
+			var etime = time() - timestamp;
+			if(etime<0) return '请写过去的日期';
+			etime=etime/1000;
+			if (etime <= 3) str=(etime)+'刚刚';
+			else if (etime <= 60) str=  Math.floor(etime)+ '秒前';
+			else if (etime <= 3600) str=  Math.floor(etime/60)  +'分钟前'; 
+			else if (etime <= 86400) str= Math.floor(etime/3600) +'小时前'; 
+			else if (etime <= 604800) str= Math.floor(etime/86400) + '天前';
+			else if (etime <= 2592000) str=  Math.floor(etime/604800)+'周前';
+			else if (etime <= 31104000) str= Math.floor(etime/2592000)  +'个月前';
+			else if (etime > 31104000) str= Math.floor(etime/31104000) + '年前';
+			return str;
+
+		}
+		//alert(time_ago(setTime(2014,10,2,13,0)));
+
+
+//-----------------------
+
+		//倒计时,(精确到秒)-----距离某日还有多少秒
+		function count_down(o){
+			var reg=/^[\d]{4}-[\d]{1,2}-[\d]{1,2}( [\d]{1,2}:[\d]{1,2}(:[\d]{1,2})?)?$/ig,str='',conn,s;
+			if(!o.match(reg)){
+				alert('参数格式为2012-01-01[ 01:01[:01]].\r其中[]内的内容可省略');
+				return false;
+			}
+			var sec=(new Date(o.replace(/-/ig,'/')).getTime() - new Date().getTime())/1000;
+			if(sec > 0) { conn='还有'; } else{ conn='已过去';  sec*=-1; }
+			s={'天':sec/24/3600,'小时':sec/3600%24,'分':sec/60%60,'秒':sec%60};
+			for(i in s){ 
+				if(Math.floor(s[i])>0 ) str += Math.floor(s[i]) + i;
+			}
+			if(Math.floor(sec)==0){ str='0秒'; }
+			return '距离' + o  + conn + str ;
+		}
+		//alert(count_down('2015-1-31 22:55:40'));
+
+		// 少分钟多少秒,如果给定时间比当前时间更早,则显示为距离2012-9-30已过去1天22小时26分30秒的格式,
+		// 如果给定时间比当前时间晚则显示为距离2012-10-3还有1天1小时32分20秒的格式.
+		// 函数调用方式举例:
+		// count_down('2012-10-2');//只给日期
+		// count_down('2012-10-2 3:22');//给出日期和时分
+		// count_down('2012-10-2 3:22:33');给出日期和时分秒
+		// 日期必须以4位年月开头,严格按照上述例子书写
+		// 形如2012-30-50 25:88:99,年月日时分秒只要有一个是错误的,程序都将无法正常运行.
+
+
+
+
+//-----------------------------------------
+
+
+
+
+
+</script>

@@ -1,0 +1,180 @@
+<script type="text/javascript">
+/*
+p1= new object();
+//主要属性
+constructor 对象的构造函数
+prototype 获得类的prototype对象,static性质
+//主要方法
+hasOwnProperty(property) 是否属于本类定义的属性
+isPrototypeOf(object) 是否使指定类的prototype
+propertyIsEnumerable(property) 是否可列举的属性
+toString() 返回对象对应的数据库
+valueOf() 返回对象对应的原始类型值
+*/
+
+function getAttributeValue(attr){
+	alert(person[attr]);
+}
+var person = new Object();
+person.name= 'zs';
+person.age = 18;
+getAttributeValue('name');
+getAttributeValue('age');
+
+//------------
+var i=new Number(10);
+Number.prototype.add=function(a){
+	return this+a;
+}
+window.alert(i.add(10).add(30));
+var b=90;
+window.alert(b.add(40));
+
+//------------
+//给系统Array对象添加自定义函数, find()方法
+Array.prototype.find=function(val){
+	//遍历数组this
+	for(var i=0; i<this.length; i++){
+		if(val==this[i]) return i;//找到了就返回下标
+	}
+	return -1;
+}
+//var arr1=new Array(3);
+arr1= ['Georage','John','Thomas'];
+arr1.find('John');//输出1
+
+//-----------//闭包closure，垃圾回收相关GC
+function A(){
+	var i=0;
+	function b(){
+		alert(++i);
+	}
+	return b;
+}
+A();//运行后，回收i变量（与GC有关）
+var c= A();//GC不会把i当做垃圾
+c();//输出0
+c();//输出1，从而证明i变量被闭包了，（变量被保护起来了）
+//闭包的作用就是在a执行完并返回后,闭包使得JS的垃圾回收机制GC不会收回a所占用的
+//资源,因为a的内部函数b的执行需要依赖a中的变量.
+
+
+
+//--------------------
+
+
+var dog={
+	name:'小狗',
+	age:8,
+	fun1:function(){ window.alert('hello,world');},
+	fun2:function(){ window.alert('okok');}
+}
+dog.fun1();
+dog.fun2();
+
+//--------call
+
+function test(){
+	window.alert(this.name);
+}
+var dog={name:'hello'};
+var name='aaa';
+test.call(dog);//输出hello
+test.call(window);//输出aaa
+
+//-------prototype的问题
+function Person(){
+	this.age='aaaa';//公开属性
+	var age= 18;//私有属性
+	this.fun1=function (){return;} //公开方法
+	fun2=function (){return;} //私有方法
+}
+//prototype添加方式,不能访问类的私有变量和方法
+Person.prototype.fun1=function(){
+	alert(this.name);	//ok (prototype方式添加的,只能用this的公开属性和方法)
+	//alert(age);		//err (不能访问私有属性和方法)
+}
+var p1=new Person();
+p1.fun1();
+
+//-------继承,对象冒充
+function Stu(name,age){
+	this.name=name;
+	this.age=age;
+	this.show=function(){
+		window.alert(this.name + ' ' + this.age);
+	}
+}
+
+function MidStu(name,age){
+	this.stu=Stu;		//冒充继承,赋值类结构
+	this.stu(name,age);	//执行赋值,继承效果
+	//js重载和重写(下面方法,写的话,覆盖父类的方法,不写的话,继承父类的方法)
+	this.show=function(){
+		window.alert('MidStu');
+	}
+}
+var midStu=new MidStu('abc',20);
+alert(midStu.name);
+
+//------------------多态
+function Dog(){
+	this.test1=function(){window.alert('dog test1');}
+}
+function Cat(){
+	this.test1=function(){window.alert('cat test1');}
+}
+var 
+	v=new Dog();
+	v.test1();
+	v=new Cat();
+	v.test1();
+
+//----------继承，多态 例子
+function Master(){
+	//给动物喂食
+	this.feed=function(animal,food){
+		//window.alert(animal.constructor); //输出调用的函数体
+		document.write('主人给' + animal.name + '喂' + food.name);
+	}
+}
+//食物
+function Food(name){
+	this.name=name;
+}
+function Fish(name){
+	this.food=Food;
+	this.food(name);
+}
+fucntion Bone(name){
+	this.food=Food;
+	this.food(name);
+}
+
+//动物
+function Animail(name){
+	this.name=name;
+	//...
+}
+function Cat(name){
+	this.animal=Animal;//对象冒充
+	this.animal(name);//执行赋值过去
+}
+function Dog(name){
+	this.animal=Animal;//对象冒充
+	this.animal(name);//执行赋值过去
+}
+
+var cat=new Cat('小猫咪');
+var dog=new Dog('小狗');
+var fish=new Fish('小鱼');
+var bone=new Bone('骨头');
+var master=new Master();
+master.feed(cat,fish);	//主人给小猫咪喂小鱼
+master.feed(dog,bone);	//主人给小狗为骨头
+master.feed(new Dog('小狗2'),new Bone('骨头2')); //主人给小狗2为骨头2
+
+
+
+
+</script>

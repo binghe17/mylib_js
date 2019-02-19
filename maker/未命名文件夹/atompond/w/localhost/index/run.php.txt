@@ -1,0 +1,1 @@
+[{"fun":"file_get_contents","opt":"w/localhost/index/db/html.tpl","echo":1}]

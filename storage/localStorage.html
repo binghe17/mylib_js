@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+<title>localStorage</title>
+</head>
+<body>
+<div id="control">
+	<button onclick="set()" title="add" class="data">设置</button>
+	<button onclick="get()" title="get" class="data">获取</button>
+	<button onclick="del()" title="del" class="data">删除</button>
+	<button onclick="clear()" title="clear" class="data">清除</button>
+</div>
+<script type="text/javascript">
+/*
+clear()
+key()
+length
+setItem()
+getItem()
+removeItem()
+*/
+
+// 增加
+function set () {
+	var k='key_'+Math.floor(Math.random()*1000),
+		v='item_'+Math.floor(Math.random()*1000);
+	localStorage.setItem(k,v);
+	w('设置了键 '+k+' 值 '+v, 'localStorage.setItem');
+}
+
+
+
+// 获取
+function get () {
+	var len=localStorage.length, i, k, v;
+	for (i=0; i<len; i++) {
+		k=localStorage.key(i);
+		v=localStorage.getItem(k);
+		w('获取了键名 '+k +' 值 '+v, 'localStorage.key & getItem');
+	}
+}
+
+
+// 删除
+function del () {
+	if(localStorage.length===0) return w('没有值可删。', 'tip');
+
+	var k=localStorage.key(0);
+	localStorage.removeItem(k);
+	w('删除了 '+k, 'localStorage.removeItem');
+}
+
+
+// 全部删除
+function clear () {
+	localStorage.clear();
+	w('全部删除。', 'localStorage.clear');
+}
+</script>
+</body>
+</html>

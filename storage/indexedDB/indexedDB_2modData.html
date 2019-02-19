@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+<title>增加或替换数据</title>
+</head>
+<body>
+<div class="reference">
+	<a href="http://www.w3.org/TR/IndexedDB" target="_blank">IndexedDB - w3.org</a>
+</div>
+<div id="debug"></div>
+
+<script type="text/javascript">
+
+
+var request,db,transaction,objectStore,data;
+
+
+// 打开或新建数据库 
+request=indexedDB.open('testdb');
+
+// 事件 - 成功时触发
+request.onsuccess=function (e) {
+	db=request.result;
+
+	transaction=db.transaction('objectStore1', 'readwrite');// 开启事务 mode:{readwrite, readonly, versionchange}
+
+	transaction.oncomplete=function (e) {
+		w('增加了数据。', 'transaction-'+e.type);
+	};// 侦听事件
+	transaction.onerror=function(e) {
+		w('无法增加数据。可能遇到键冲突。', 'transaction-'+e.type);
+	}
+
+	objectStore=transaction.objectStore('objectStore1');// 获取存储对象
+
+	function createData () {
+		return {
+			username:'u_'+Math.random(),
+			password:'p_'+Math.random(),
+			ctime:new Date().getTime(),
+		};
+	}
+
+	var data1=createData();
+	request=objectStore.put(data1);
+	request.onsuccess=function (e) {
+		w('插入了数据 '+data1.username, 'put-'+e.type);
+	};
+	request.onerror=function (e) {
+		w('无法插入数据 '+data1.username, 'put-'+e.type);
+	};
+	request.abort=function (e) {
+		w('无法插入数据 '+data1.username, 'put-'+e.type);
+	};
+
+	var data2=createData();
+	data2.id=1;
+	request=objectStore.put(data2);
+	request.onsuccess=function (e) {
+		w('替换了数据 '+data2.username, 'put-'+e.type);
+	};
+	request.onerror=function (e) {
+		w('无法插入数据 '+data2.username, 'put-'+e.type);
+	};
+	request.abort=function (e) {
+		w('无法插入数据 '+data2.username, 'put-'+e.type);
+	};
+}
+
+</script>
+</body>
+</html>

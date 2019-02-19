@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>sessionStorage</title>
+</head>
+<body>
+<script type="text/javascript">
+/*
+clear()
+key()
+length
+setItem()
+getItem()
+removeItem()
+*/
+
+// 增加
+sessionStorage.setItem('name', 'my name.');
+
+
+// 获取键名
+var name=sessionStorage.key(0);
+w(name);
+
+
+// 获取值
+var name=sessionStorage.getItem('name');
+w(name);
+w(sessionStorage.length);// 1
+
+
+// 删除
+sessionStorage.removeItem('name');
+w(sessionStorage.getItem('name'));//如果 null 则被删除
+w(sessionStorage.length);// 0
+
+
+// 全部删除
+// sessionStorage.clear();
+
+
+// 显示，往document 写入文字
+function w (text) {
+	var tag=document.createElement('pre');
+	var date=new Date().getTime();
+	tag.innerText='['+date+'] '+text;
+	document.body.appendChild(tag);
+	// body...
+}
+</script>
+</body>
+</html>

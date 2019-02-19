@@ -1,0 +1,96 @@
+<!doctype html>
+<head>
+	<meta charset="utf-8"/>
+	<title>CodeMirror: Theme Demo</title>
+
+<link rel="stylesheet" href="theme/myTheme.css">
+<link rel="stylesheet" href="lib/codemirror.css">
+<link rel="stylesheet" href="addon/hint/show-hint.css">
+<script src="lib/codemirror.js"></script>
+<script src="mode/htmlmixed/htmlmixed.js"></script>
+<script src="mode/xml/xml.js"></script>
+<script src="mode/javascript/javascript.js"></script>
+<script src="mode/css/css.js"></script>
+<script src="mode/php/php.js"></script>
+<script src="mode/clike/clike.js"></script>
+<script src="addon/hint/show-hint.js"></script>
+<script src="addon/hint/javascript-hint.js"></script>
+<script src="addon/selection/active-line.js"></script>
+<script src="addon/edit/matchbrackets.js"></script>
+
+
+</head>
+<body>
+
+
+<div id="nav">
+<article>
+<h2>Theme Demo</h2>
+
+
+<textarea id="coding">
+
+</textarea>
+
+
+<style>
+textarea{ width: 550px; min-height: 200px ;}
+.CodeMirror { border: 2px solid #ccc;  width: 550px; min-height: 200px ;/*font-weight:bold;*/ font-family: tahoma; font-size: 12px; }
+/*.CodeMirror-scroll { overflow: auto; max-height: 300px; }*/
+</style>
+
+
+<script>
+function codemirrorJS(textareaId){
+	// var mixedMode = {
+	// 	name: "htmlmixed",
+	// 	scriptTypes: [
+	// 		{matches: /\/x-handlebars-template|\/x-mustache/i, mode: null},
+	// 		{matches: /(text|application)\/(x-)?vb(a|script)/i, mode: "vbscript"}
+	// 	]
+	// };
+
+	editor = CodeMirror.fromTextArea(document.getElementById(textareaId), {
+		mode: "application/x-httpd-php",
+		// mode: mixedMode,
+		// mode: "text/html",
+		// mode: {name: "javascript", globalVars: true},
+		extraKeys: {"Ctrl-Alt": "autocomplete"},
+
+		lineNumbers: true,
+		matchBrackets: true,
+		styleActiveLine: true,
+
+		theme: "myTheme"
+
+		//readOnly: true,
+		//dragDrop: false,
+
+		// continueComments: "Enter",
+		// extraKeys: {"Ctrl-Q": "toggleComment"},
+
+	});
+	//editor.setOption("theme", "myTheme");
+}
+
+
+codemirrorJS('coding');//新建
+getDB('coding');
+//alert(editor.getValue()); //这样获取（不能从原来的textarea中获取修改之后的数据）
+
+function saveDB(key){
+	localStorage.setItem(key,editor.getValue());
+}
+function getDB(key){
+	editor.getDoc().setValue(localStorage.getItem(key));//IE报错: localStorage函数在HTTP服务器路径下访问正常
+	editor.refresh();
+}
+</script>
+
+
+<button onclick="saveDB('coding')">[ 保存 ]</button>
+<!-- <button onclick="getDB('coding')">还原</button> -->
+</article>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>indexedDB</title>
+<link rel="stylesheet" type="text/css" href="main.css">
+<script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+/* Lesson A
+
+	indexedDB.cmp(a,b);// compare   a比较b
+
+	if(a>b) return 1
+	if(a=b) return 0
+	if(a<b) return -1
+*/
+
+w(indexedDB.cmp(9, 1));// 1
+w(indexedDB.cmp(9, 9));// 0
+w(indexedDB.cmp(1, 9));// -1
+
+
+
+
+
+/* Lesson B
+
+	获取所有数据库名称
+*/
+void function() {
+	var request=indexedDB.webkitGetDatabaseNames();// IDBRequest对象
+	w('获取本机所有数据库名称。');
+	w(request.readyState);//pending - 当前状态
+
+		// 侦听错误
+		request.onerror=function (e) {
+			w(e.type);
+			w(request.readyState);
+			w(request.result);
+			w(request.source);
+		}
+
+		// 侦听成功
+		request.onsuccess=function (e) {
+			we('获取本机所有数据库名称成功。', e.type, request.readyState);
+			// w(e.type);// success
+			// w(request.readyState);// done - 当前状态
+
+			w('遍历数据库名称结果集。');// DOMStringList - 结果集 length,item(),contains()
+			for(var i=0,len=request.result.length; i<len; i++) {
+				w(request.result.item(i));// request.result.item(i) === request.result[i]
+			}
+
+			// w(request.source);// null - IDBObjectStore or IDBIndex or IDBCursor
+		}
+
+		// 侦听完成
+		request.oncomplete=function (e) {
+			w(e.type);// complete
+			w(request.readyState);
+			w(request.result);
+			w(request.source);
+		}
+}();
+</script>
+
+</body>
+</html>

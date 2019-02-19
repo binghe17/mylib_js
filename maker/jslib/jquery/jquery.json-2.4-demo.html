@@ -1,0 +1,24 @@
+
+<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
+<script src="jquery.json-2.4.js"></script>
+<script>
+$(function() {
+
+
+//-----USE----javaScript对象\数组 与 json 互相转换---------------
+var thing = {plugin: 'jquery-json', version: 2.3};	//js对象
+var arr= [1,434,'6234'];
+var encoded = $.toJSON( thing );			//转换为json,	结果: '{"plugin":"jquery-json","version":2.3}'
+var name = $.evalJSON( encoded ).plugin;	//js对象.属性,	结果: "jquery-json"
+var version = $.evalJSON(encoded).version;	//js对象.属性,	结果: 2.3
+
+alert(arr);
+alert(encoded);
+alert(name);
+alert(version);
+//------------------------------------------------------------//
+
+});
+</script>
+
+

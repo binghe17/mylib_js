@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<base href="/0906/_help/_js_study/maker/" />
+<script type="text/javascript" src="jslib/jquery/jquery-2.2.0.min.js"></script>
+<script type="text/javascript" src="jslib/zcore.js"></script>
+<script type="text/javascript" src="jslib/m.js"></script>
+<style type="text/css">
+	*{padding: 0;margin: 0;}
+	#filelist, #savebox {float:left; width:350px; height: 240px; background: #ccc; text-align:center; border: 3px solid #888;padding: 5px;}
+	#filelist ul{background: #aaa; width: 100%;height: 100%;}
+	#filelist li{background: #eee; border: 1px solid #ccc;}
+	#savebox textarea {background:#aaa; width: 100%;height: 90%;}
+	#savebox input{width: 200px;}
+	#savebox button{width: 40px;}
+</style>
+</head>
+<body>
+
+<div id="filelist">
+	<ul>
+	
+	</ul>
+</div>
+<div id="savebox">
+	<textarea id="savedata" placeholder="savedata" title="保存值"></textarea>
+	<button>list</button>
+	<input id="filename" type="text" placeholder="文件名atom/html/" title="文件名atom/html/tpl" />
+	<button>save</button> <button>read</button> 
+	<button>a</button><button>b</button>
+</div>
+
+
+<!-- <div class="container"></div>
+<dev>Gdata:
+	<input type="text" name="key" placeholder="key" title="变量名：变量数据格式a/b/c" />
+	<input type="text" name="val" placeholder="val" title="变量值：保存值"/>
+	<div id='w1'>当前位置</div>
+	<ul id="devlist"></ul>
+	<button>save</button>
+	<button>showjson</button>
+</dev>
+<div id="test"></div>
+<div act="showLog"></div> -->
+</body>
+</html>

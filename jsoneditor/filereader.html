@@ -1,0 +1,116 @@
+<meta charset="UTF-8">
+<script type="text/javascript">  
+
+
+// /**
+//  * 中止该读取操作.在返回时,readyState属性的值为DONE.
+//  */
+// reader.abort();
+// /**
+//  * 开始读取指定的Blob对象或File对象中的内容. 
+//  * 当读取操作完成时,readyState属性的值会成为DONE,如果设置了onloadend事件处理程序,则调用之.
+//  * 同时,result属性中将包含一个data: URL格式的字符串以表示所读取文件的内容.
+//  */
+// reader.readAsDataURL(file);
+// /**
+//  * 同上, result属性中将包含一个字符串以表示所读取的文件内容.
+//  * encoding是可选项,类型为字符串,表示了返回数据所使用的编码.如果不指定,默认为UTF-8.
+//  */
+// reader.readAsText(file[, encoding ]);
+// /**
+//  * 同上, result属性中将包含一个ArrayBuffer对象以表示所读取文件的内容.
+//  */
+// reader.readAsArrayBuffer(file); 
+// /**
+//  * 同上, result属性中将包含所读取文件的原始二进制数据.
+//  */
+// reader.readAsBinaryString(file);
+
+
+
+
+// 用来把文件读入内存，并且读取文件中的数据。FileReader接口提供了一个异步API，
+// 使用该API可以在浏览器主线程中异步访问文件系统，读取文件中的数据。到目前文职，
+// 只有FF3.6+和Chrome6.0+实现了FileReader接口。
+
+// 1、FileReader接口的方法
+// FileReader接口有4个方法，其中3个用来读取文件，另一个用来中断读取。无论读取成功或失败，
+// 方法并不会返回读取结果，这一结果存储在result属性中。
+
+// FileReader接口的方法
+// 方法名                     参数            	描述
+// readAsBinaryString        file    			将文件读取为二进制编码
+// readAsText                file,[encoding]  	将文件读取为文本
+// readAsDataURL             file         		将文件读取为DataURL
+// abort                     (none)             终端读取操作
+
+
+// 2、FileReader接口事件
+// FileReader接口包含了一套完整的事件模型，用于捕获读取文件时的状态。
+
+// FileReader接口的事件
+// 事件  			描述
+// onabort 			中断
+// onerror 			出错
+// onloadstart 		开始
+// onprogress  		正在读取
+// onload  			成功读取
+// onloadend   		读取完成，无论成功失败
+
+
+
+//-------------------------------
+
+var result=document.getElementById("result");  
+var file=document.getElementById("file");  
+  
+//判断浏览器是否支持FileReader接口  
+if(typeof FileReader == 'undefined'){  
+	result.InnerHTML="<p>你的浏览器不支持FileReader接口！</p>";  
+	//使选择控件不可操作  
+	file.setAttribute("disabled","disabled");  
+}  
+  
+function readAsDataURL(){  
+	
+	var file = document.getElementById("file").files[0];  
+	if(!/image\/\w+/.test(file.type)){  //检验是否为图像文件  
+		alert("看清楚，这个需要图片！");  
+		return false;  
+	}  
+	var reader = new FileReader();  
+	reader.readAsDataURL(file);  //将文件以Data URL形式读入页面  
+	reader.onload=function(e){  
+		var result=document.getElementById("result");  
+		result.innerHTML='<img src="' + this.result +'" alt="" />';  //显示文件  
+	}  
+}  
+  
+function readAsBinaryString(){  
+	var file = document.getElementById("file").files[0];  
+	var reader = new FileReader();  
+	reader.readAsBinaryString(file);  //将文件以二进制形式读入页面  
+	reader.onload=function(f){  
+		var result=document.getElementById("result");  
+		result.innerHTML=this.result;  //显示文件  
+	}  
+}  
+  
+function readAsText(){  
+	var file = document.getElementById("file").files[0];  
+	var reader = new FileReader();  
+	reader.readAsText(file);  //将文件以文本形式读入页面  
+	reader.onload=function(f){  
+		var result=document.getElementById("result");  
+		result.innerHTML=this.result;  //显示文件  
+	}  
+}  
+</script>  
+<p>  
+	<label>请选择一个文件：</label>  
+	<input type="file" id="file" />  
+	<input type="button" value="读取图像" onclick="readAsDataURL()" />  
+	<input type="button" value="读取二进制数据" onclick="readAsBinaryString()" />  
+	<input type="button" value="读取文本文件" onclick="readAsText()" />  
+</p>  
+<div id="result" name="result"></div>  

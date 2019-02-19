@@ -1,0 +1,30 @@
+
+<script type="text/javascript">
+//History 对象
+//http://www.w3school.com.cn/htmldom/dom_obj_history.asp
+
+	//加载 history 列表中的前一个 URL
+	function goBack(){
+		window.history.back()
+	}
+	//加载 history 列表中的下一个 URL
+	function goForward(){
+		window.history.forward()
+	}
+	//加载 history 列表中的某个具体页面
+	function goBack(){
+		window.history.go(-1)
+	}
+
+	//返回浏览器历史列表中的 URL 数量
+	//alert(history.length);
+
+</script>
+
+
+<input type="button" value="Back" onclick="goBack()" />
+<input type="button" value="Forward" onclick="goForward()" />
+<input type="button" value="Back" onclick="goBack()" />
+
+
+

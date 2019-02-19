@@ -1,0 +1,122 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<div id="info">
+	<h3>我的博客</h3>
+	<p>欢迎你的加入</p>
+</div>
+
+<script type="text/javascript">
+
+//===============================================console
+
+// 五、显示某个节点的内容
+// console.dirxml()用来显示网页的某个节点（node）所包含的html/xml代码。
+
+var info = document.getElementById('info');//<div id="info"><h3>我的博客</h3><p>欢迎你的加入</p></div>
+console.dirxml(info);//div#info
+
+
+
+
+// 一、显示信息的命令
+
+console.log('log');			//记录
+console.info('info');		//信息
+//console.error('error');	//错误
+console.warn('warn');		//警告
+
+
+
+// 二：占位符
+// console上述的集中度支持printf的占位符格式，支持的占位符有：字符（%s）、整数（%d或%i）、浮点数（%f）和对象（%o）
+
+console.log("%d年%d月%d日",2011,3,26);
+
+
+
+// 三、信息分组
+
+console.group("第一组信息");
+console.log("第一组 第一条:");
+console.log("第一组 第二条:");
+console.groupEnd();
+
+
+
+// 四、查看对象的信息
+// console.dir()可以显示一个对象所有的属性和方法。
+
+var info = {
+	blog:"http://www.ido321.com",
+	QQGroup:259280570,
+	message:"程序爱好者欢迎你的加入"
+};
+console.dir(info);
+
+
+
+// 七、追踪函数的调用轨迹。
+// 函数是如何被调用的，在其中加入console.trace()方法就可以了
+
+function add(a,b){
+	console.trace();//追踪函数的调用轨迹
+	return a+b;
+}
+var x = add3(1,1);
+function add3(a,b){return add2(a,b);}
+function add2(a,b){return add1(a,b);}
+function add1(a,b){return add(a,b);}
+
+
+
+
+// 八、计时功能
+// console.time()和console.timeEnd()，用来显示代码的运行时间。
+
+console.time("控制台计时器一");//运行时间
+for(var i=0;i<1000;i++){
+	for(var j=0;j<1000;j++){}
+}
+console.timeEnd("控制台计时器一");//运行时间
+
+
+
+
+
+
+
+// 六、判断变量是否是真 ---------safali断言失败
+// console.assert()用来判断一个表达式或变量是否为真。如果结果为否，则在控制台输出一条相应信息，并且抛出一个异常。
+
+var result = 1;
+console.assert( result );
+var year = 2014;
+console.assert(year == 2018 );
+
+
+
+
+// 九、console.profile()的性能分析-----debug插件中可以吧，safali 自带的调试器不行
+// 性能分析（Profiler）就是分析程序各个部分的运行时间，找出瓶颈所在，使用的方法是console.profile()。
+
+function All(){
+	alert(11);
+	for(var i=0;i<10;i++){
+		funcA(1000);
+	}
+	funcB(10000);
+}
+function funcA(count){
+	for(var i=0;i<count;i++){}
+}
+function funcB(count){
+	for(var i=0;i<count;i++){}
+}
+
+console.profile('性能分析器');
+All();
+console.profileEnd();
+
+
+
+</script>

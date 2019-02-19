@@ -1,0 +1,134 @@
+<script type="text/javascript">
+//Window 对象
+//http://www.w3school.com.cn/htmldom/dom_obj_window.asp
+
+	//-------------ATTR----------------------------
+
+	//window.name 	//属性可设置或返回存放窗口的名称的一个字符串
+	// window.closed 	//返回窗口是否已被关闭
+	// window.opener	//返回对创建此窗口的窗口的引用
+
+	// window.parent 	//返回父窗口
+	// window.self 	//返回自身窗口 (window 属性等价于 window.self 属性)
+	// window.top 		//返回最顶层的先辈窗口
+	// window.status 	//设置窗口状态栏的文本
+
+	//窗口的左上角在屏幕上的的 x 坐标和 y 坐标
+	// window.screenLeft;
+	// window.screenTop;
+	// window.screenX;
+	// window.screenY;
+	// window.moveBy(x,y);//对窗口的当前坐标把它移动指定的像素
+	// window.moveTo(x,y);//把窗口的左上角移动到一个指定的坐标
+
+
+
+	// //要引用窗口中的一个框架，可以使用如下语法：
+	// frame[i]			//当前窗口的框架
+	// self.frame[i]	//当前窗口的框架
+	// w.frame[i]		//窗口 w 的框架
+
+	// //要引用一个框架的父窗口（或父框架），可以使用下面的语法：
+	// parent			//当前窗口的父窗口
+	// self.parent		//当前窗口的父窗口
+	// w.parent 		//窗口 w 的父窗口
+
+	// //要从顶层窗口含有的任何一个框架中引用它，可以使用如下语法：
+	// top				//当前框架的顶层窗口
+	// self.top			//当前框架的顶层窗口
+	// f.top			//框架 f 的顶层窗口
+
+
+
+
+
+	//-----------FUN------------------------
+
+	// myWindow=window.open('','','width=200,height=100')
+	// myWindow.document.write("This is 'myWindow'")
+	// myWindow.blur();//把键盘焦点从顶层窗口移开
+	// myWindow.close();//关闭浏览器窗口
+	// myWindow.focus();//把键盘焦点给予一个窗口
+	// myWindow.opener.document.write("This is the parent window");
+
+	function open_win() {
+		//打开一个新的浏览器窗口或查找一个已命名的窗口
+		//window.open(URL,name,features,replace);
+		window.open("http://www.w3school.com.cn");
+	}
+
+	function printpage() {
+		window.print();//打印当前窗口的内容
+	}
+
+	function disp_prompt() {
+		//alert();		//显示带有一段消息和一个确认按钮的警告框
+		//confirm();	//显示带有一段消息以及确认按钮和取消按钮的对话框
+		var name=prompt("Please enter your name","");//显示可提示用户输入的对话框
+		if (name!=null && name!="") document.write("Hello " + name + "!");
+	}
+
+	function resizeByWindow() {
+		window.resizeBy(-100,-100);//按照指定的像素调整窗口的大小
+	}
+
+	function resizeToWindow() {
+		window.resizeTo(500,300);//把窗口的大小调整到指定的宽度和高度
+	}
+
+	function scrollByWindow() {
+		window.scrollBy(100,100);//按照指定的像素值来滚动内容
+	}
+
+	function scrollToWindow() {
+		window.scrollTo(100,500);//把内容滚动到指定的坐标
+	}
+
+	function timedMsg() {
+		setTimeout("alert('2 seconds!')",5000);//在指定的毫秒数后调用函数或计算表达式
+	}
+
+
+	var int=self.setInterval("clock()",50)
+	function clock() {
+		var t=new Date()
+		document.getElementById("clock").value=t
+	}
+
+
+
+
+</script>
+<input type="button" onclick="open_win()" value="window.open()" />
+<input type="button" onclick="printpage()" value="window.print()" />
+<input type="button" onclick="disp_prompt()" value="window.prompt()" />
+<br>
+<input type="button" onclick="resizeByWindow()" value="window.ResizeBy()">
+<input type="button" onclick="resizeToWindow()" value="window.ResizeTo()">
+<input type="button" onclick="scrollByWindow()" value="window.scrollBy()" />
+<input type="button" onclick="scrollToWindow()" value="window.scrollTo()" />
+<br>
+<input type="button" onClick="timedMsg()" value="setTimeout alert 2 seconds!">
+<input type="text" id="clock" size="35" />
+<input type="button" onclick="int=window.clearInterval(int)" value="stop clock" />
+
+<p>SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL</p>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<p>SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL</p>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<p>SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL SCROLL</p>
+
